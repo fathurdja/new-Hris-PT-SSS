@@ -82,14 +82,20 @@ jobs:
         script: |
           cd ${{ secrets.SERVER_TARGET_DIR }}
           
+          echo "📁 Memastikan Struktur Direktori Storage & Livewire..."
+          mkdir -p storage/framework/{sessions,views,cache/data}
+          mkdir -p storage/logs
+          mkdir -p storage/app/public
+          mkdir -p storage/app/livewire-tmp
+          mkdir -p bootstrap/cache
+          
           echo "📦 Menjalankan Composer Install di Server..."
           composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
           
-          echo "🔒 Mengatur Permissions..."
-          find storage -type f -exec chmod 664 {} \;
-          find storage -type d -exec chmod 775 {} \;
-          find bootstrap/cache -type f -exec chmod 664 {} \;
-          find bootstrap/cache -type d -exec chmod 775 {} \;
+          echo "🔒 Mengatur Ownership & Permissions (menggunakan sudo untuk www)..."
+          # Ganti www:www menjadi www-data:www-data jika tidak memakai aaPanel
+          sudo chown -R www:www storage bootstrap/cache
+          sudo chmod -R 775 storage bootstrap/cache
           
           echo "🔗 Memastikan Storage Terhubung..."
           php artisan storage:link || true
