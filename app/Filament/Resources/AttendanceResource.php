@@ -34,7 +34,20 @@ class AttendanceResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Select::make('employee_id')
+                    ->relationship('employee', 'name')
+                    ->disabled(),
+                Forms\Components\TextInput::make('check_in_time')
+                    ->disabled(),
+                Forms\Components\TextInput::make('check_out_time')
+                    ->disabled(),
+                Forms\Components\FileUpload::make('attendance_photo')
+                    ->image()
+                    ->disabled(),
+                Forms\Components\TextInput::make('latitude')
+                    ->disabled(),
+                Forms\Components\TextInput::make('longitude')
+                    ->disabled(),
             ]);
     }
 
@@ -84,6 +97,7 @@ class AttendanceResource extends Resource
                 ExportAction::make()->exporter(AttendanceExporter::class),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

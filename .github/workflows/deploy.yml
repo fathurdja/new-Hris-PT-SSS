@@ -112,7 +112,8 @@ jobs:
           php artisan view:cache
           
           echo "🌐 Mempublikasikan Aset Livewire..."
-          php artisan livewire:publish --assets || true
+          php artisan livewire:publish --assets
+          php artisan filament:assets
           
           echo "🚀 Mengoptimalkan Filament Panel..."
           php artisan filament:optimize || true

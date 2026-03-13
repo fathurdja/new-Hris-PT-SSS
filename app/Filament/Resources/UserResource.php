@@ -36,21 +36,28 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->required()->label('Full Name'),
-                Forms\Components\TextInput::make('email')->email()->required(),
-                Forms\Components\TextInput::make('password')->password()->required()->hiddenOn('edit'),
-                Forms\Components\TextInput::make('nip')->required()->unique(ignoreRecord: true),
-                Forms\Components\FileUpload::make('photo')->image()->directory('employees')->avatar(),
-                Forms\Components\Select::make('division_id')
-                    ->relationship('division', 'name')
-                    ->required()
-                    ->label('Division'),
-                Forms\Components\Textarea::make('address')->columnSpanFull(),
-                Forms\Components\TextInput::make('phone')->tel(),
-                Forms\Components\Select::make('roles')
-                    ->multiple()
-                    ->relationship('roles', 'name')
-                    ->preload(),
+                Forms\Components\Section::make('Employee Information')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')->required()->label('Full Name'),
+                        Forms\Components\TextInput::make('email')->email()->required(),
+                        Forms\Components\TextInput::make('password')
+                            ->password()
+                            ->required()
+                            ->hiddenOn('edit')
+                            ->dehydrated(fn ($state) => filled($state)),
+                        Forms\Components\TextInput::make('nip')->required()->unique(ignoreRecord: true),
+                        Forms\Components\FileUpload::make('photo')->image()->directory('employees')->avatar(),
+                        Forms\Components\Select::make('division_id')
+                            ->relationship('division', 'name')
+                            ->required()
+                            ->label('Division'),
+                        Forms\Components\Textarea::make('address')->columnSpanFull(),
+                        Forms\Components\TextInput::make('phone')->tel(),
+                        Forms\Components\Select::make('roles')
+                            ->multiple()
+                            ->relationship('roles', 'name')
+                            ->preload(),
+                    ])->columns(2)
             ]);
     }
 
@@ -75,6 +82,7 @@ class UserResource extends Resource
                 ImportAction::make()->importer(UserImporter::class),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

@@ -46,21 +46,30 @@ class AdminPanelProvider extends PanelProvider
                             border-radius: 1rem;
                             margin: 1rem;
                             min-height: calc(100vh - 2rem);
+                            position: relative;
+                            z-index: 1;
                         }
                         .fi-topbar {
                             background: rgba(255, 255, 255, 0.75) !important;
                             backdrop-filter: blur(12px);
+                            z-index: 10;
                         }
                         .fi-sidebar {
                             background: rgba(255, 255, 255, 0.9) !important;
                             backdrop-filter: blur(16px);
+                            z-index: 20;
                         }
-                        div[role="dialog"] {
-                            background: rgba(255, 255, 255, 0.85) !important;
-                            backdrop-filter: blur(16px);
+                        /* Modal visibility fix */
+                        .fi-modal {
+                            z-index: 9999 !important;
+                        }
+                        .fi-modal-window {
+                            background: rgba(255, 255, 255, 0.95) !important;
+                            backdrop-filter: blur(20px) !important;
+                            z-index: 10000 !important;
                         }
                         @media (prefers-color-scheme: dark) {
-                            .fi-main, .fi-topbar, .fi-sidebar, div[role="dialog"] {
+                            .fi-main, .fi-topbar, .fi-sidebar, .fi-modal-window {
                                 background: rgba(17, 24, 39, 0.85) !important;
                             }
                         }
