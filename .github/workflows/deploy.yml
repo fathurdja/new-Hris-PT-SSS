@@ -70,7 +70,7 @@ jobs:
         REMOTE_PORT: ${{ secrets.SERVER_PORT }}
         SOURCE: "./"
         TARGET: ${{ secrets.SERVER_TARGET_DIR }}
-        EXCLUDE: "/.git/, /.github/, /.env, /node_modules/, /tests/, /storage/framework/cache/data/, /storage/framework/sessions/, /storage/framework/views/, /storage/logs/, /.user.ini, /.htaccess"
+        EXCLUDE: "/.git/, /.github/, /.env, /node_modules/, /tests/, /storage/framework/cache/data/, /storage/framework/sessions/, /storage/framework/views/, /storage/logs/, /public/.user.ini, /public/.htaccess"
 
     - name: 🚀 Run Post-Deploy Artisan Commands on Server
       uses: appleboy/ssh-action@v1.0.3
