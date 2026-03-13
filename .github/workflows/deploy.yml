@@ -66,6 +66,9 @@ jobs:
         script: |
           cd ${{ secrets.SERVER_TARGET_DIR }}
           
+          echo "📦 Menjalankan Composer Install di Server..."
+          composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+          
           echo "🔒 Mengatur Permissions..."
           find storage -type f -exec chmod 664 {} \;
           find storage -type d -exec chmod 775 {} \;
