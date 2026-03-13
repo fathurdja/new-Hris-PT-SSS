@@ -37,12 +37,28 @@ jobs:
         curl -s https://install.zerotier.com | sudo bash
         sudo zerotier-cli join ${{ secrets.ZEROTIER_NETWORK_ID }}
         
-        # Wait for the connection to establish (usually takes a few seconds)
-        sleep 10
+        echo "Menunggu koneksi network ZeroTier OK..."
+        for i in {1..15}; do
+          if sudo zerotier-cli listnetworks | grep -q 'OK'; then
+            echo "ZeroTier Network OK!"
+            break
+          fi
+          sleep 4
+        done
         
-        # Verify connection
+        echo "Mengecek konektivitas ping ke SERVER_HOST..."
+        for i in {1..10}; do
+          if ping -c 1 -W 3 ${{ secrets.SERVER_HOST }} > /dev/null 2>&1; then
+            echo "✅ PING ke server berhasil! Koneksi SSH siap digunakan."
+            break
+          else
+            echo "⏳ Menunggu server dapat terjangkau via PING..."
+            sleep 3
+          fi
+        done
+        
+        # Verify info
         sudo zerotier-cli info
-        sudo zerotier-cli listnetworks
 
     - name: 📂 Deploy & Sync Files to Server via Rsync
       uses: easingthemes/ssh-deploy@main
@@ -54,7 +70,7 @@ jobs:
         REMOTE_PORT: ${{ secrets.SERVER_PORT }}
         SOURCE: "./"
         TARGET: ${{ secrets.SERVER_TARGET_DIR }}
-        EXCLUDE: "/.git/, /.github/, /.env, /node_modules/, /tests/, /storage/framework/cache/data/, /storage/framework/sessions/, /storage/framework/views/, /storage/logs/"
+        EXCLUDE: "/.git/, /.github/, /.env, /node_modules/, /tests/, /storage/framework/cache/data/, /storage/framework/sessions/, /storage/framework/views/, /storage/logs/, /.user.ini, /.htaccess"
 
     - name: 🚀 Run Post-Deploy Artisan Commands on Server
       uses: appleboy/ssh-action@v1.0.3
